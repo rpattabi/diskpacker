@@ -53,6 +53,6 @@ class BinFactory
   end
   
   def create_bin()     
-    Bin.new(@type.to_s,capacity)
+    Bin.new(@type.to_s,@capacity)
   end
 end
