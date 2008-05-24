@@ -4,8 +4,9 @@ require 'element.rb'
 class BinPacker
   attr_accessor :bins, :elements
 
-  def initialize( bins, elements)
-    @bins, @elements = bins, elements
+  def initialize( bin_factory, elements)
+    @bin_factory, @elements = bin_factory, elements
+    @bins = [bin_factory.create_bin]
   end
   
   def best_fit(output_file="bin_packed.txt")
@@ -33,7 +34,7 @@ class BinPacker
 
         # if the element didn't fit in any existing bin, create a new bin and add it there
         unless is_element_in_bin
-          new_bin = @bins.last.clone
+          new_bin = @bin_factory.create_bin
           @bins << new_bin
 
           if new_bin.capacity >= element.size
