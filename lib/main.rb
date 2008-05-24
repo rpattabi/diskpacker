@@ -6,8 +6,7 @@ require 'disk_project_generators/k3b.rb'
 
 require 'find'
 
-bins = []
-bins << Bin.new
+bin_factory = BinFactory.new.create_bin(DVD4_9)
 
 elements = []
 
@@ -37,7 +36,7 @@ h.each do |key,val|
   elements << Element.new(key,val/1024/1024)
 end 
 
-bin_packer = BinPacker.new(bins, elements)
+bin_packer = BinPacker.new(bin_factory, elements)
 bin_packer.best_fit()
 
 irp_generator = InfraRecorderProjectGenerator.new(bin_packer.bins.first, input_paths)
