@@ -7,12 +7,7 @@ require 'iconv'
 class InfraRecorderProjectGenerator
   attr_accessor :bin, :elements_input_paths
 
-  def initialize(bin, elements_input_paths)
-    @bin = bin
-    @elements_input_paths = elements_input_paths
-  end
-  
-  def generate_irp(file="divx_movies_#{@bin.id}.irp")
+  def generate(file="divx_movies_#{@bin.id}.irp")
     irp_template = %q{<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <InfraRecorder>
 	<Project version="2" type="0" dvd="1">
@@ -48,7 +43,7 @@ class InfraRecorderProjectGenerator
 				<FullPath><%= element.name %></FullPath>
 				<FileTime>128204264600000000</FileTime>
 <% unless File.directory?(element.name) %>
-				<FileSize><%= element.size %></FileSize>
+				<FileSize><%= (element.size*1024*1024).to_i %></FileSize>
 <% end %>
 			</File<%= idx %>>
 <% idx += 1 %>
@@ -59,44 +54,23 @@ class InfraRecorderProjectGenerator
     }
     
     title = "divx_movies_#{@bin.id}"
-    elements_input_paths = @elements_input_paths
-    bin = @bin
-    elements = @bin.elements
-    sub_elements = []
+    elements = []
     
-    elements.each do |element|
-      if File.directory?(element.name)
-        Find.find(element.name) do |path|
-          sub_elements << Element.new(path, File.size(path)) unless path == element.name
-        end
-      end
+    @bin.elements.each do |e|
+      elements << ElementWalker.new.walk(e)
     end
     
-    elements += sub_elements
-    elements.uniq!
-    elements.sort! {|x,y| y.name <=> x.name}
-    
-    files = []
-    folders = []
-    
-    elements.each do |element|
-      if File.directory?(element.name)
-        folders << element
-      else
-        files << element
-      end
-    end
-    
-    elements = folders + files
+    elements.flatten!
     
     irp = File.open(file,'w')
     irp << ERB.new(irp_template, 0, '<>').result(binding)
     
 #    # we need to convert the irp files with encoding utf-16
-#    converter = Iconv.new("UTF-16LE", "ISO-8859-1")
-#    utf_16_str = converter.iconv(irp_proj_text)
+#    converter = Iconv.new("UTF-16","UTF-8")
+#    puts irp.to_s
+#    utf_16_str = converter.iconv(irp.to_s)
 #    
-#    File.open(file,'w') do |f|
+#    File.open('/tmp/utf_16.irp','w') do |f|
 #      f.puts utf_16_str
 #    end
   end

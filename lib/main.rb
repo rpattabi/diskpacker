@@ -6,49 +6,64 @@ require 'disk_project_generators/k3b.rb'
 
 require 'find'
 
-bin_factory = BinFactory.new(:DVD4_7)
-
-elements = []
-
-h = {}
-input_paths = []
-
-File.open('input_paths.txt','r').readlines.each do |input_path|
-  input_path.strip!
-  input_paths << input_path
+def dir_tree_walker(input_path, &block)
+  result = yield(input_path)
   
-  Find.find(input_path) do |path|
-    if File.directory?(path) and path != input_path
-      size = 0
-      Find.find(path) do |path2|
-        size += File.size(path2)
+  if File.directory?(input_path)
+    Find.find(input_path) do |path|
+      if path != input_path && File.dirname(path) == input_path
+          result << dir_tree_walker(path,&block)
       end
-      h[path] = size unless size == 0
-      Find.prune
-    elsif File.dirname(path) == input_path
-      h[path] = File.size(path) unless File.size(path) == 0
     end
   end
+  
+  result
 end
 
-h.each do |key,val|
-  puts "file:#{key}\t\tsize:#{val/1024/1024}MB\n"
-  elements << Element.new(key,val/1024/1024)
-end 
+def element_generator(input_paths)
+  root_elements = []
+  
+  input_paths.each do |input_path| 
+      root_elements << dir_tree_walker(input_path) do |f|
+        if File.directory?(f)
+          CompositeElement.new(f, File.size(f)/1024.0)
+        else
+          Element.new(f, File.size(f)/(1024.0*1024.0))
+        end
+      end
+  end
+  
+  root_elements
+end
 
+input_paths = []
+File.open('input_paths.txt','r').readlines.each do |input_path|
+  input_path.strip!
+  input_paths << input_path  
+end
+
+elements = []
+root_elements = element_generator(input_paths)
+root_elements.each do |root|
+  elements << root.elements
+end
+
+elements.flatten!
+
+bin_factory = BinFactory.new(:DVD4_7)
 bin_packer = BinPacker.new(bin_factory, elements)
 bin_packer.best_fit()
 
-irp_generator = InfraRecorderProjectGenerator.new(bin_packer.bins.first, input_paths)
-#irp_generator.generate_irp()
+irp_generator = InfraRecorderProjectGenerator.new
+irp_generator.elements_input_paths = input_paths
 
 bin_packer.bins.each do |bin|
   irp_generator.bin = bin
-  irp_generator.generate_irp()
+  irp_generator.generate()
   
   # generate batch file to delete the files
   file = File.open("divx_movies_#{bin.id}.bat",'w')
-  bin.elements.each do |e|
+  bin.elements.flatten.each do |e|
     file << "del /P /F \"#{e.name}\"\n" if File.directory?(e.name)
   end
 end

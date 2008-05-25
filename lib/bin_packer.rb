@@ -6,7 +6,8 @@ class BinPacker
 
   def initialize( bin_factory, elements)
     @bin_factory, @elements = bin_factory, elements
-    @bins = [bin_factory.create_bin]
+    @bins = []
+    @bins << bin_factory.create_bin
   end
   
   def best_fit(output_file="bin_packed.txt")
