@@ -7,11 +7,7 @@ require 'iconv'
 class K3bProjectGenerator
   attr_accessor :bin
   
-  def initialize(bin)
-    @bin = bin
-  end
-  
-  def generate_k3b(file="divx_movies_#{@bin.id}.xml")
+  def generate(file="divx_movies_#{@bin.id}.xml")
     k3b_template = %q{
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE k3b_dvd_project>
