@@ -6,7 +6,7 @@ require 'disk_project_generators/k3b.rb'
 
 require 'find'
 
-bin_factory = BinFactory.new.create_bin(DVD4_9)
+bin_factory = BinFactory.new.create_bin(:DVD4_7)
 
 elements = []
 

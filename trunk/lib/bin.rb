@@ -5,7 +5,7 @@ class Bin
   attr_reader :elements, :free_space
   @@bin_id = 0
 
-  def initialize(type='DVD4.7', capacity=4480)
+  def initialize(type=:DVD4_7, capacity=4480)
     @elements = []
     
     @@bin_id += 1
@@ -40,19 +40,19 @@ class Bin
 end
 
 class BinFactory
-  def initialize(type=DVD4_9)
+  def initialize(type=:DVD4_7)
     @type = type
     
-    if @type == DVD4_9
+    if @type == :DVD4_7
       @capacity = 4480
-    elsif @type == CDR
+    elsif @type == :CDR
       @capacity = 700
     else
       raise "disk type not supported."
     end    
   end
   
-  def create_bin()     
-    Bin.new(@type.to_s,@capacity)
+  def create_bin()
+    Bin.new(@type,@capacity)
   end
 end
