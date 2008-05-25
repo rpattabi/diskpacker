@@ -1,0 +1,35 @@
+#labels Featured,Phase-Deploy
+This page describes the basic usage of DiskPacker
+
+= Introduction =
+
+DiskPacker is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
+
+
+= Details =
+
+  * Get the source :  `svn checkout http://diskpacker.googlecode.com/svn/trunk/ diskpacker`
+  * _input_paths.txt_ is the place where you can fill in the paths to your source directories. (This file is located under folder _lib_ inside _diskpacker_)
+
+
+For instance, on a windows system input_paths.txt can be like this:
+
+{{{
+C:/MY DOCUMENTS/MY DOWNLOADS
+d:/movies
+c:/my documents/my pictures
+}}}
+_Please note the forward slashes (/) instead of the usual backslash (\) in paths._
+
+Alternatively, on a linux system
+
+{{{
+/home/username/Documents
+/home/username/Downloads
+}}}
+
+  * Run main.rb: `ruby main.rb`
+  * Output files are generated in the same directory (_lib_)
+    * bin_packed.txt -> shows how many disks you need to backup all your stuff (as specified in _input_paths.txt_) and which files go in which disks, freespace in each disks etc. You can use this info to backup your files manually.
+    * *windows only* _divx_movies_1.irp, divx_movies_2.irp, etc_ -> infrarecorder project files. You can open these files in infrarecorder (Opensource cd/dvd burner for windows) to burn your DVDs.
+    * *windows only* _divx_movies_1.bat, divx_movies_2.bat, etc_ -> batch files to erase files after backup. _divx_movies_1.bat_ has code to erase files that are included in _divx_movies_1.irp_ or *id=1* section in _bins_packed.txt_
