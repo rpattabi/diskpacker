@@ -21,6 +21,27 @@ class TestBinFactory < Test::Unit::TestCase
   def test_create_bad_bin
     assert_raise(RuntimeError) { BinFactory.new(:BAD) }
   end
+  
+  def test_bin_id
+    dvd_bin_factory = BinFactory.new(:DVD4_7)
+    dvd0 = dvd_bin_factory.create_bin
+    dvd1 = dvd_bin_factory.create_bin
+    dvd2 = dvd_bin_factory.create_bin
+    dvd3 = dvd_bin_factory.create_bin
+    dvd4 = dvd_bin_factory.create_bin
+    
+    assert_equal([0,1,2,3,4],[dvd0.id,dvd1.id,dvd2.id,dvd3.id,dvd4.id])
+    
+    cdr_bin_factory = BinFactory.new(:CDR)
+    cdr0 = cdr_bin_factory.create_bin
+    cdr1 = cdr_bin_factory.create_bin
+    cdr2 = cdr_bin_factory.create_bin
+    cdr3 = cdr_bin_factory.create_bin
+    cdr4 = cdr_bin_factory.create_bin
+    
+    assert_equal([0,1,2,3,4],[cdr0.id,cdr1.id,cdr2.id,cdr3.id,cdr4.id])
+    
+  end
 end
 
 class TestBin < Test::Unit::TestCase
