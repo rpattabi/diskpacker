@@ -7,7 +7,7 @@ class Element
   end
   
   def to_s
-    "#{@name}\t\tsize=#{@size} MB\n"
+    @name
   end
 end
 
@@ -21,11 +21,6 @@ class CompositeElement < Element
   
   def <<(e)
     @elements << e
-  end
-  
-  def to_s
-    s =@elements.collect {|e| "#{e.to_s}"}
-    "#{@name}\n" + s.to_s
   end
 end
 
@@ -48,6 +43,6 @@ class ElementWalker
   end
   
   def elements
-    @elements.sort {|a,b| a.name <=> b.name}
+    @elements.flatten.sort {|a,b| a.name <=> b.name}
   end
 end

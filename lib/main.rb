@@ -6,6 +6,8 @@ require 'disk_project_generators/k3b.rb'
 
 require 'find'
 
+$KCODE = 'UTF8'
+
 def dir_tree_walker(input_path, &block)
   result = yield(input_path)
   
@@ -26,9 +28,9 @@ def element_generator(input_paths)
   input_paths.each do |input_path| 
       root_elements << dir_tree_walker(input_path) do |f|
         if File.directory?(f)
-          CompositeElement.new(f, File.size(f)/1024.0)
+          CompositeElement.new(f, File.size(f)*1024.0)
         else
-          Element.new(f, File.size(f)/(1024.0*1024.0))
+          Element.new(f, File.size(f))
         end
       end
   end

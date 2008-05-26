@@ -7,7 +7,7 @@ class TestBinFactory < Test::Unit::TestCase
     dvd = dvd_bin_factory.create_bin
     assert_equal(Bin,dvd.class)
     assert_equal(:DVD4_7,dvd.type)
-    assert_equal(4480,dvd.capacity)
+    assert_equal(4480*1024*1024,dvd.capacity)
   end
   
   def test_create_cdr_bin
@@ -15,7 +15,7 @@ class TestBinFactory < Test::Unit::TestCase
     cdr = cdr_bin_factory.create_bin
     assert_equal(Bin,cdr.class)
     assert_equal(:CDR,cdr.type)
-    assert_equal(700,cdr.capacity)
+    assert_equal(700*1024*1024,cdr.capacity)
   end
   
   def test_create_bad_bin
@@ -49,19 +49,19 @@ class TestBin < Test::Unit::TestCase
     cdr_bin_factory = BinFactory.new(:CDR)
     cdr = cdr_bin_factory.create_bin
     
-    e = Element.new('/etc/netbeans.conf',2000/1024.0)
+    e = Element.new('/etc/netbeans.conf',2000)
     cdr.add_element(e)
     
-    assert_equal(700-2000/1024.0,cdr.free_space)
-    assert_equal(2000/1024.0,cdr.stored)
+    assert_equal(700*1024*1024-2000,cdr.free_space)
+    assert_equal(2000,cdr.stored)
     
     small = Element.new('etc/small.txt', 5)
     assert_equal(true,cdr.element_fit?(small))
     
-    biggie = Element.new('etc/big.bang', 700 )
+    biggie = Element.new('etc/big.bang', 700*1024*1024 )
     assert_equal(false,cdr.element_fit?(biggie))
     
-    correct = Element.new('etc/correct.png', 700-2000/1024.0)
+    correct = Element.new('etc/correct.png', 700*1024*1024-2000)
     assert_equal(true,cdr.element_fit?(correct))
   end
   
@@ -69,10 +69,10 @@ class TestBin < Test::Unit::TestCase
     dvd_bin_factory = BinFactory.new(:DVD4_7)
     dvd = dvd_bin_factory.create_bin
     
-    e = Element.new('/etc/file.ext',2000/1024.0)
-    ee = Element.new('/etc/sub/file2.ext',2000/1024.0)
-    ce = CompositeElement.new('/etc/directory',4000/1024.0)
-    cce = CompositeElement.new('/etc/directory/sub',2000/1024.0)
+    e = Element.new('/etc/file.ext',2000)
+    ee = Element.new('/etc/sub/file2.ext',2000)
+    ce = CompositeElement.new('/etc/directory',4000)
+    cce = CompositeElement.new('/etc/directory/sub',2000)
     
     ce << e
     cce << ee

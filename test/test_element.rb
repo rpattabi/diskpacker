@@ -10,7 +10,7 @@ class TestElement < Test::Unit::TestCase
   
   def test_element_to_s
     e = Element.new('/etc/netbeans.conf',2000)
-    assert_equal("/etc/netbeans.conf\t\tsize=2000 MB\n",e.to_s)
+    assert_equal("/etc/netbeans.conf",e.to_s)
   end
 end
 
