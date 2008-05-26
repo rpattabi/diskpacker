@@ -43,7 +43,7 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
     expected_s = %q{<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <InfraRecorder>
 	<Project version="3" type="0" dvd="1">
-		<Label>divx_movies_0</Label>
+		<Label>BACKUP_0</Label>
 		<FileSystem>
 			<Identifier>0</Identifier>
 		</FileSystem>
@@ -64,23 +64,29 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
 		</Boot>
 		<Data>
 			<File0 flags="0">
+				<InternalName>/directory</InternalName>
+				<FullPath>/etc/directory</FullPath>
+				<FileTime>128204264600000000</FileTime>
+				<FileSize>3</FileSize>
+			</File0>
+			<File1 flags="0">
 				<InternalName>/directory/file.ext</InternalName>
 				<FullPath>/etc/directory/file.ext</FullPath>
 				<FileTime>128204264600000000</FileTime>
 				<FileSize>1</FileSize>
-			</File0>
-			<File1 flags="0">
+			</File1>
+			<File2 flags="0">
 				<InternalName>/directory/sub</InternalName>
 				<FullPath>/etc/directory/sub</FullPath>
 				<FileTime>128204264600000000</FileTime>
 				<FileSize>1</FileSize>
-			</File1>
-			<File2 flags="0">
+			</File2>
+			<File3 flags="0">
 				<InternalName>/directory/sub/file2.ext</InternalName>
 				<FullPath>/etc/directory/sub/file2.ext</FullPath>
 				<FileTime>128204264600000000</FileTime>
 				<FileSize>1</FileSize>
-			</File2>
+			</File3>
 		</Data>
 	</Project>
 </InfraRecorder>    

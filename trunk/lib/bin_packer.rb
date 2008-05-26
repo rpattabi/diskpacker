@@ -58,7 +58,7 @@ class BinPacker
       wasted += bin.free_space
     end
     
-    output << "Total stored capacity : #{stored} MB\n"
-    output << "Total wasted capacity : #{wasted} MB\n"
+    output << "Total stored capacity : #{(stored/1024/1024).to_i} MB\n"
+    output << "Total wasted capacity : #{(wasted/1024/1024).to_i} MB\n"
   end
 end

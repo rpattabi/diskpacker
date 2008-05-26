@@ -41,7 +41,7 @@ end
 input_paths = []
 File.open('input_paths.txt','r').readlines.each do |input_path|
   input_path.strip!
-  input_paths << input_path  
+  input_paths << input_path  if File.directory?(input_path)
 end
 
 elements = []
@@ -64,8 +64,8 @@ bin_packer.bins.each do |bin|
   irp_generator.generate()
   
   # generate batch file to delete the files
-  file = File.open("divx_movies_#{bin.id}.bat",'w')
-  bin.elements.flatten.each do |e|
+  file = File.open("delete_backup_set_#{bin.id}.bat",'w')
+  bin.elements.each do |e|
     file << "del /P /F \"#{e.name}\"\n" if File.directory?(e.name)
   end
 end
