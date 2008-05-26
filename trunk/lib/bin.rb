@@ -3,14 +3,11 @@ require 'element.rb'
 class Bin
   attr_accessor :id, :type, :capacity
   attr_reader :elements, :free_space
-  @@bin_id = 0
 
-  def initialize(type=:DVD4_7, capacity=4480)
+  def initialize(id=0, type=:DVD4_7, capacity=4480)
     @elements = []
     
-    @@bin_id += 1
-    @id = @@bin_id
-    
+    @id = id
     @type, @capacity = type, capacity
     @free_space = capacity
   end
@@ -41,6 +38,7 @@ end
 
 class BinFactory
   def initialize(type=:DVD4_7)
+    @id = 0
     @type = type
     
     if @type == :DVD4_7
@@ -53,6 +51,8 @@ class BinFactory
   end
   
   def create_bin()
-    Bin.new(@type,@capacity)
+    bin = Bin.new(@id,@type,@capacity)
+    @id += 1
+    bin
   end
 end
