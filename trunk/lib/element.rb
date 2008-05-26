@@ -29,9 +29,7 @@ class CompositeElement < Element
   end
 end
 
-class ElementWalker
-  attr_reader :elements
-  
+class ElementWalker  
   def initialize
     @elements = []
   end
@@ -47,5 +45,9 @@ class ElementWalker
         end
       end
     end
+  end
+  
+  def elements
+    @elements.sort {|a,b| a.name <=> b.name}
   end
 end
