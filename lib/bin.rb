@@ -2,7 +2,7 @@ require 'element.rb'
 
 class Bin
   attr_accessor :id, :type, :capacity
-  attr_reader :elements, :free_space
+  attr_reader :free_space
 
   def initialize(id=0, type=:DVD4_7, capacity=4480*1024)
     @elements = []
@@ -15,6 +15,8 @@ class Bin
   def add_element(element)
     @elements << element
     @free_space -= element.size
+    
+    raise "bin overloaded" if @free_space < 0
   end
   
   def element_fit?(element)
@@ -25,10 +27,14 @@ class Bin
     @capacity - @free_space
   end
   
+  def elements
+    @elements.flatten.sort
+  end
+  
   def to_s
     output = "\n\nid = #{@id} :\n"
-    output += "\tOccupied space = #{@capacity-@free_space} MB\n"
-    output += "\tFree space = #{@free_space} MB\n"
+    output += "\tOccupied space = #{((@capacity-@free_space)/1024/1024).to_i} MB\n"
+    output += "\tFree space = #{(@free_space/1024/1024).to_i} MB\n"
     output += "\tContents :\n\t\t"
     
     es_to_s = @elements.collect { |e| e.to_s }

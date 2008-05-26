@@ -9,6 +9,10 @@ class Element
   def to_s
     @name
   end
+  
+  def <=>(rhs)
+    self.name <=> rhs.name
+  end
 end
 
 class CompositeElement < Element
@@ -21,6 +25,14 @@ class CompositeElement < Element
   
   def <<(e)
     @elements << e
+  end
+  
+  def size
+    total = 0
+    @elements.flatten.each do |e|
+      total += e.size
+    end
+    total
   end
 end
 

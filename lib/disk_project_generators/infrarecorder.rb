@@ -9,7 +9,7 @@ $KCODE = "UTF8"
 class InfraRecorderProjectGenerator
   attr_accessor :bin, :elements_input_paths
 
-  def generate(file="divx_movies_#{@bin.id}.irp")
+  def generate(file="BACKUP_#{@bin.id}.irp")
     irp_template = %q{<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <InfraRecorder>
 	<Project version="3" type="0" dvd="1">
@@ -55,15 +55,17 @@ class InfraRecorderProjectGenerator
 </InfraRecorder>    
     }
     
-    title = "divx_movies_#{@bin.id}"
+    title = "BACKUP_#{@bin.id}"
     elements = []
     
     walker = ElementWalker.new
     @bin.elements.each do |e|
+      elements << e
       walker.walk(e)
     end
     
-    elements = walker.elements
+    elements << walker.elements
+    elements.flatten!.sort!
     
     irp = File.open(file,'w')
     irp << ERB.new(irp_template, 0, '<>').result(binding)
