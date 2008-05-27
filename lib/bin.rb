@@ -62,3 +62,19 @@ class BinFactory
     bin
   end
 end
+
+def bins_report(bins, output_file="bin_packed.txt")
+  output = File.open(output_file, 'w')
+
+  stored = 0
+  wasted = 0
+  bins.each do |bin|
+    stored += bin.stored
+    wasted += bin.free_space
+  end
+
+  output << bins.to_s + "\n"  
+  output << "\n\nTotal number of disks : #{bins.size}\n"  
+  output << "Total stored capacity : #{(stored/1024/1024).to_i} MB\n"
+  output << "Total wasted capacity : #{(wasted/1024/1024).to_i} MB\n"    
+end
