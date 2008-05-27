@@ -66,9 +66,7 @@ class TestBinPacker < Test::Unit::TestCase
   
   def test_packing
     bin_packer = prepare_bin
-    
-    out = Tempfile.new("tempfile")
-    bin_packer.best_fit(out.path)
+    bin_packer.best_fit()
     
     assert_equal(1,bin_packer.bins.size)
     assert_equal(7,bin_packer.bins.first.elements.size)

@@ -79,7 +79,7 @@ class InfraRecorderProjectGenerator
     end
        
     open(file,'w') do |f|
-      f.write Iconv.new("utf-16le", "UTF-8").iconv(irp_to_s).to_s
+      f.write Iconv.new("utf-16le", "UTF-8").iconv(irp_to_s)
     end
   end
 end

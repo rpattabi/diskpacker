@@ -10,7 +10,7 @@ class BinPacker
     @bins << bin_factory.create_bin
   end
   
-  def best_fit(output_file="bin_packed.txt")
+  def best_fit()
     unless @elements.empty?
       # Sort in descending order
       @elements.sort! { |a,b| b.size <=> a.size }
@@ -47,18 +47,13 @@ class BinPacker
       end
     end
     
-    output = File.open(output_file, 'w')
-    output << @bins.to_s + "\n"
-    output << "Total number of disks : #{@bins.size}\n"
-    
-    stored = 0
-    wasted = 0
+    #fix the bin ids
+    id = 0
     @bins.each do |bin|
-      stored += bin.stored
-      wasted += bin.free_space
+      bin.id = id
+      id += 1
     end
     
-    output << "Total stored capacity : #{(stored/1024/1024).to_i} MB\n"
-    output << "Total wasted capacity : #{(wasted/1024/1024).to_i} MB\n"
-  end
+    @bins
+  end  
 end
