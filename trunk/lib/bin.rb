@@ -37,7 +37,7 @@ class Bin
     output += "\tFree space = #{(@free_space/1024/1024).to_i} MB\n"
     output += "\tContents :\n\t\t"
     
-    es_to_s = @elements.collect { |e| e.to_s }
+    es_to_s = self.elements.collect { |e| e.to_s }
     output += es_to_s.join("\n\t\t")
   end
 end

@@ -11,7 +11,7 @@ class Element
   end
   
   def <=>(rhs)
-    self.name <=> rhs.name
+    self.name.downcase <=> rhs.name.downcase
   end
 end
 
@@ -55,6 +55,6 @@ class ElementWalker
   end
   
   def elements
-    @elements.flatten.sort {|a,b| a.name <=> b.name}
+    @elements.flatten.sort
   end
 end
