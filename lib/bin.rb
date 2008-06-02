@@ -115,8 +115,11 @@ class BinsReport
 
         bin.elements.each do |e|
           if File.directory?(e.name)
+            output_windows << "del /P /F /S \"#{e.to_s_windows}\"\n"
+            output_linux << "rm --recursive --verbose -I \"#{e.to_s}\"\n"
+          else
             output_windows << "del /P /F \"#{e.to_s_windows}\"\n"
-            output_linux << "rm --recursive --verbose \"#{e.to_s}\"\n"
+            output_linux << "rm --verbose -I \"#{e.to_s}\"\n"            
           end
         end    
     end
