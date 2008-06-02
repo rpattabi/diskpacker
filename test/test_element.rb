@@ -12,6 +12,14 @@ class TestElement < Test::Unit::TestCase
     e = Element.new('/etc/netbeans.conf',2000)
     assert_equal("/etc/netbeans.conf",e.to_s)
   end
+  
+  def test_element_to_s_windows
+    e = Element.new('/etc/netbeans.conf',2000)
+    assert_equal("\\etc\\netbeans.conf",e.to_s_windows)
+
+    e1 = Element.new('/etc\netbeans.conf',2000)
+    assert_equal("\\etc\\netbeans.conf",e.to_s_windows)
+  end
 end
 
 class TestCompositeElement < Test::Unit::TestCase
