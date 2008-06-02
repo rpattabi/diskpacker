@@ -3,6 +3,7 @@ require 'element.rb'
 require 'bin_packer.rb'
 require 'disk_project_generators/infrarecorder.rb'
 require 'disk_project_generators/k3b.rb'
+require 'disk_project_generators/brasero'
 
 require 'find'
 
@@ -75,6 +76,16 @@ def generate_irp(bins,input_paths)
   end  
 end
 
+def generate_braseraproject(bins,input_paths)
+  brasera_generator = BraseroProjectGenerator.new
+  brasera_generator.elements_input_paths = input_paths
+
+  bins.each do |bin|
+    brasera_generator.bin = bin
+    brasera_generator.generate()
+  end    
+end
+
 input_paths = collect_input_paths('input_paths.txt')
 elements = generate_elements(input_paths)
 
@@ -86,3 +97,4 @@ bin_report.report()
 bin_report.generate_delete_script()
 
 generate_irp(bins,input_paths)
+generate_braseraproject(bins,input_paths)
