@@ -1,9 +1,7 @@
 require 'bin.rb'
 require 'element.rb'
 require 'bin_packer.rb'
-require 'disk_project_generators/infrarecorder.rb'
-require 'disk_project_generators/k3b.rb'
-require 'disk_project_generators/brasero'
+require 'disk_project_generator_factory'
 
 require 'find'
 
@@ -66,24 +64,23 @@ def pack_bins(bin_factory,elements)
   bin_packer.best_fit()  # returns bins
 end
 
-def generate_irp(bins,input_paths)
-  irp_generator = InfraRecorderProjectGenerator.new
-  irp_generator.elements_input_paths = input_paths
+def generate_disk_burning_projects(bins,input_paths)
+  project_generator_factory = DiskProjectGeneratorFactory.new
+
+  generators = []
+  ['brasero','infra_recorder'].each do |g|
+    generator = project_generator_factory.create_generator(g)
+    generator.elements_input_paths = input_paths
+    generators << generator
+  end
 
   bins.each do |bin|
-    irp_generator.bin = bin
-    irp_generator.generate()
-  end  
-end
-
-def generate_braseraproject(bins,input_paths)
-  brasera_generator = BraseroProjectGenerator.new
-  brasera_generator.elements_input_paths = input_paths
-
-  bins.each do |bin|
-    brasera_generator.bin = bin
-    brasera_generator.generate()
-  end    
+    generators.each do |generator|
+      generator.elements_input_paths = input_paths
+      generator.bin = bin
+      generator.generate()
+    end
+  end
 end
 
 input_paths = collect_input_paths('input_paths.txt')
@@ -96,5 +93,4 @@ bin_report = BinsReport.new(bins)
 bin_report.report()
 bin_report.generate_delete_script()
 
-generate_irp(bins,input_paths)
-generate_braseraproject(bins,input_paths)
+generate_disk_burning_projects(bins, input_paths)
