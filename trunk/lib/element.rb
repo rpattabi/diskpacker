@@ -10,6 +10,10 @@ class Element
     @name
   end
   
+  def to_s_windows
+    @name.gsub(/\//,"\\")
+  end
+  
   def <=>(rhs)
     self.name.downcase <=> rhs.name.downcase
   end

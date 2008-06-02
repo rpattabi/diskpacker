@@ -50,16 +50,6 @@ def collect_input_paths(file='input_paths.txt')
   input_paths
 end
 
-def generate_delete_batch(bins)
-  # generate batch file to delete the files
-  bins.each do |bin|
-    file = File.open("delete_backup_set_#{bin.id}.bat",'w')
-    bin.elements.each do |e|
-      file << "del /P /F \"#{e.name}\"\n" if File.directory?(e.name)
-    end
-  end
-end
-
 def generate_elements(input_paths)
   elements = []
   root_elements = element_generator(input_paths)
@@ -90,7 +80,9 @@ elements = generate_elements(input_paths)
 
 bin_factory = BinFactory.new(:DVD4_7)
 bins = pack_bins(bin_factory,elements)
-bins_report(bins)
+
+bin_report = BinsReport.new(bins)
+bin_report.report()
+bin_report.generate_delete_script()
 
 generate_irp(bins,input_paths)
-generate_delete_batch(bins)
