@@ -60,8 +60,8 @@ class InfraRecorderProjectGenerator
     
     walker = ElementWalker.new
     @bin.elements.each do |e|
-      elements << e
-      walker.walk(e)
+        elements << e 
+        walker.walk(e) if e.class == CompositeElement
     end
     
     elements << walker.elements

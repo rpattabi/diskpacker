@@ -61,6 +61,13 @@ class TestCompositeElement < Test::Unit::TestCase
 end
 
 class TestElementWalker < Test::Unit::TestCase
+  def test_simple_element_walk
+    e = Element.new('/etc/file/ext',2000)
+    walker = ElementWalker.new
+    walker.walk(e)
+    assert_equal([e],walker.elements)
+  end
+  
   def test_walk    
     e = Element.new('/etc/file.ext',2000)
     ee = Element.new('/etc/sub/file2.ext',2000)
