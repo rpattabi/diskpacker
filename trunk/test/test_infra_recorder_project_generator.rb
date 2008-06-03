@@ -11,6 +11,7 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
     dvd_bin_factory = BinFactory.new(:DVD4_7)
     dvd = dvd_bin_factory.create_bin
     
+    e_ = Element.new('/etc/file_.ext', 0)
     e = Element.new('/etc/directory/file.ext',2000/1024.0)
     ee = Element.new('/etc/directory/sub/file2.ext',2000/1024.0)
     ce = CompositeElement.new('/etc/directory',4000/1024.0)
@@ -20,6 +21,7 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
     cce << ee
     ce << cce
 
+    dvd.add_element(e_)
     dvd.add_element(ce)
     
     # generate irp for this bin
@@ -36,6 +38,9 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
       f.read
     end
     
+    # Note: The directories shall have flag="1" in the irp file. But since we have created dummy elements,
+    # for the purpose of the test, all will be considered as non directories, so the flag="0"
+    # The real directory will have flag="1"
     expected_s = %q{<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <InfraRecorder>
 	<Project version="3" type="0" dvd="1">
@@ -83,6 +88,12 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
 				<FileTime>128204264600000000</FileTime>
 				<FileSize>1</FileSize>
 			</File3>
+			<File4 flags="0">
+				<InternalName>/file_.ext</InternalName>
+				<FullPath>/etc/file_.ext</FullPath>
+				<FileTime>128204264600000000</FileTime>
+				<FileSize>0</FileSize>
+			</File4>
 		</Data>
 	</Project>
 </InfraRecorder>    
