@@ -1,7 +1,3 @@
-# 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
- 
 
 $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 
@@ -92,7 +88,12 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
 </InfraRecorder>    
     }
     
-    assert_equal(expected_s,out_s.gsub!(/\000/,''))
+    expected_s_stripped = ""
+    expected_s.split("\n").each do |line|
+      expected_s_stripped += line.strip
+    end
+    
+    assert_equal(expected_s_stripped,out_s.gsub(/\000/,''))
   end
   
 #  def test_to_be_removed

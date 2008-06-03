@@ -77,9 +77,17 @@ class InfraRecorderProjectGenerator
       f.rewind
       f.read
     end
-       
-    open(file,'w') do |f|
-      f.write Iconv.new("utf-16le", "UTF-8").iconv(irp_to_s)
+    
+    # Need to strip leading and trailing spaces
+    # These cause the utf-8 to utf-16le conversion to fail in windows
+    # But works fine in linux
+    irp_to_s_stripped = ""
+    irp_to_s.split("\n").each do |line|
+      irp_to_s_stripped += line.strip
+    end
+    
+    open(file,'w') do |f| 
+      f.write Iconv.new("UTF-16LE", "UTF-8").iconv(irp_to_s_stripped)
     end
   end
 end
