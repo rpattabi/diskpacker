@@ -1,25 +1,29 @@
 #labels Featured,Phase-Deploy
-This page describes the basic usage of DiskPacker
+This page describes the basic usage of _DiskPacker
 
 = Introduction =
 
-DiskPacker is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
+_DiskPacker is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
 
+You just give the list of directories which has your files or other directories you intend to backup. This is what you get back from DiskPacker in return:
+
+  * It will give you optimized list of files and directories for the given type of disk (e.g. CD or DVD).
+  * It will also generate the project files for some of the well known disk burning softwares in windows and linux. You can readily use open these projects in the burning softwares to burn the disks.
+  * _DiskPacker also generates shell script (and batch file for windows) which you can run if you want to delete the files you have just backedup if you want.
 
 = Details =
 
   * Get the source :  `svn checkout http://diskpacker.googlecode.com/svn/trunk/ diskpacker`
-  * _input_paths.txt_ is the place where you can fill in the paths to your source directories. (This file is located under folder _lib_ inside _diskpacker_)
+  * _input_paths.txt_ is the place where you can fill in the paths to your source directories. (This file is located under folder _lib_ inside _diskpacker)
 
 
 For instance, on a windows system input_paths.txt can be like this:
 
 {{{
-C:/MY DOCUMENTS/MY DOWNLOADS
+C:\MY DOCUMENTS\MY DOWNLOADS
 d:/movies
-c:/my documents/my pictures
+c:\my documents/my pictures
 }}}
-_Please note the forward slashes (/) instead of the usual backslash (\) in paths._
 
 Alternatively, on a linux system
 
@@ -31,5 +35,5 @@ Alternatively, on a linux system
   * Run main.rb: `ruby main.rb`
   * Output files are generated in the same directory (_lib_)
     * bin_packed.txt -> shows how many disks you need to backup all your stuff (as specified in _input_paths.txt_) and which files go in which disks, freespace in each disks etc. You can use this info to backup your files manually.
-    * *windows only* _divx_movies_1.irp, divx_movies_2.irp, etc_ -> infrarecorder project files. You can open these files in infrarecorder (Opensource cd/dvd burner for windows) to burn your DVDs.
-    * *windows only* _divx_movies_1.bat, divx_movies_2.bat, etc_ -> batch files to erase files after backup. _divx_movies_1.bat_ has code to erase files that are included in _divx_movies_1.irp_ or *id=1* section in _bins_packed.txt_
+    * *windows only* _BACKUP_0.irp, BACKUP_1.irp, etc_ -> Infrarecorder project files. You can open these files in Infrarecorder (Opensource cd/dvd burner for windows) to burn your CD/DVDs.
+    * *windows only* _delete_backup_set_0.bat, _delete_backup_set_1.bat, etc_ -> batch files to erase files after backup. _delete_backup_set_0.bat_ has code to erase files that are included in _divx_movies_0.irp_ or *id=0* section in _bins_packed.txt_
