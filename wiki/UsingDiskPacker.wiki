@@ -13,27 +13,32 @@ You just give the list of directories which has your files or other directories 
 
 = Details =
 
-  * Get the source :  `svn checkout http://diskpacker.googlecode.com/svn/trunk/ diskpacker`
-  * _input_paths.txt_ is the place where you can fill in the paths to your source directories. (This file is located under folder _lib_ inside _diskpacker_)
+  * Get the source with this command, of course, you must have installed subversion:  `svn checkout http://diskpacker.googlecode.com/svn/trunk/ diskpacker`
+  * `input_paths.txt` is the place where you can fill in the paths to your source directories. (This file is located under folder `lib` inside `diskpacker`)
 
 
-For instance, on a windows system input_paths.txt can be like this:
+For instance, on a windows system `input_paths.txt` can be like this:
 
+{{{
     C:\MY DOCUMENTS\MY DOWNLOADS
     d:/movies
     c:\my documents/my pictures
+}}}
 
 Alternatively, on a linux system
 
+{{{
     /home/username/Documents
     /home/username/Downloads
+}}}
 
-  * Run main.rb with the following command `ruby main.rb`
-  * Output files are generated in the same directory (_lib_)
-    * *Report* A report is generated with information about how many disks you need to backup all your stuff and which files go in which disks, free space in each disks, etc. You can use this info to backup your files manually. (_bin_packed_windows.txt_ and _bin_packed_linux.txt_ are generated now in order to accommodate file path differences)
+  * Run `main.rb` with the following command `ruby main.rb`
+  * Output files are generated in the same directory (`lib`)
+    * *Report* 
+      * A report is generated with information about how many disks you need to backup all your stuff and which files go in which disks, free space in each disks, etc. You can use this info to backup your files manually. (`bin_packed_windows.txt` and `bin_packed_linux.txt` are generated now in order to accommodate file path differences)
     * *Generated Disk Burning Projects* 
-      * *windows only* Infrarecorder projects are generated viz., _BACKUP_0.irp, BACKUP_1.irp, etc_. You can open these files in Infrarecorder, a opensource cd/dvd burner for windows, to burn your CD/DVDs.
-      * *linux only* Brasero projects are generated viz., _brasero_BACKUP_0.xml, _brasero_BACKUP_1.xml, etc_. You can open these files in Brasero, a opensource cd/dvd burner for linux GNOME desktop. It is also now the default burner in Ubuntu.
+      * *Windows only* Infrarecorder projects are generated viz., `BACKUP_0.irp`, `BACKUP_1.irp`, etc. You can open these files in Infrarecorder, a open source cd/dvd burner for windows, to burn your CD/DVDs.
+      * *Linux only* Brasero projects are generated viz., `brasero_BACKUP_0.xml`, `brasero_BACKUP_1.xml`, etc. You can open these files in Brasero, a open source cd/dvd burner for linux GNOME desktop. It is also now the default burner in Ubuntu.
     * *Eraser scripts*
-      * *windows only* Batch files are generated to erase the files after backup if desired viz., _delete_backup_set_0.bat, _delete_backup_set_1.bat, etc_. _delete_backup_set_0.bat_ has code to erase files that are included in _BACKUP_0.irp_ or _id=0_ section in _bins_packed_windows.txt_
-      * *linux only* Shell scripts are generated to erase the files after backup if desired viz., _delete_backup_set_0.sh, _delete_backup_set_1.sh, etc_. _delete_backup_set_0.sh_ has code to erase files that are included in _brasero_BACKUP_0.xml_ or _id=0_ section in _bins_packed_linux.txt_
+      * *Windows only* Batch files are generated to erase the files after backup if desired viz., `delete_backup_set_0.bat`, `delete_backup_set_1.bat`, etc. `delete_backup_set_0.bat` has code to erase files that are included in `BACKUP_0.irp` or `id=0` section in `bins_packed_windows.txt`
+      * *Linux only* Shell scripts are generated to erase the files after backup if desired viz., `delete_backup_set_0.sh`, `delete_backup_set_1.sh`, etc. `delete_backup_set_0.sh` has code to erase files that are included in `brasero_BACKUP_0.xml` or `id=0` section in `bins_packed_linux.txt`
