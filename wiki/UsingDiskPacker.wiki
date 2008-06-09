@@ -1,15 +1,15 @@
 #labels Featured,Phase-Deploy
-This page describes the basic usage of _DiskPacker _
+This page describes the basic usage of [DiskPacker]
 
 = Introduction =
 
-_DiskPacker _ is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
+[DiskPacker] is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
 
-You just give the list of directories which has your files or other directories you intend to backup. This is what you get back from _DiskPacker _ in return:
+You just give the list of directories which has your files or other directories you intend to backup. This is what you get back from [DiskPacker] in return:
 
   * It will give you optimized list of files and directories for the given type of disk (e.g. CD or DVD).
   * It will also generate the project files for some of the well known disk burning softwares in windows and linux. You can readily use open these projects in the burning softwares to burn the disks. (Currently Infrarecorder, and Brasero are supported. K3B support is on the way)
-  * _DiskPacker _ also generates shell script (and batch file for windows) which you can run if you want to delete the files you have just backed up if you want.
+  * [DiskPacker] also generates shell script (and batch file for windows) which you can run if you want to delete the files you have just backed up if you want.
 
 = Details =
 
@@ -19,20 +19,16 @@ You just give the list of directories which has your files or other directories 
 
 For instance, on a windows system input_paths.txt can be like this:
 
-{{{
-C:\MY DOCUMENTS\MY DOWNLOADS
-d:/movies
-c:\my documents/my pictures
-}}}
+    C:\MY DOCUMENTS\MY DOWNLOADS
+    d:/movies
+    c:\my documents/my pictures
 
 Alternatively, on a linux system
 
-{{{
-/home/username/Documents
-/home/username/Downloads
-}}}
+    /home/username/Documents
+    /home/username/Downloads
 
-  * Run main.rb: `ruby main.rb`
+  * Run main.rb with the following command `ruby main.rb`
   * Output files are generated in the same directory (_lib_)
     * *Report* A report is generated with information about how many disks you need to backup all your stuff and which files go in which disks, free space in each disks, etc. You can use this info to backup your files manually. (_bin_packed_windows.txt_ and _bin_packed_linux.txt_ are generated now in order to accommodate file path differences)
     * *Generated Disk Burning Projects* 
