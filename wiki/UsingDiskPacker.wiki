@@ -1,15 +1,15 @@
 #labels Featured,Phase-Deploy
-This page describes the basic usage of _DiskPacker_
+This page describes the basic usage of _DiskPacker _
 
 = Introduction =
 
-_DiskPacker_ is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
+_DiskPacker _ is a Ruby script. At present there are no pre-compiled binaries (exe file for windows etc). One can run it from the source.
 
-You just give the list of directories which has your files or other directories you intend to backup. This is what you get back from _DiskPacker_ in return:
+You just give the list of directories which has your files or other directories you intend to backup. This is what you get back from _DiskPacker _ in return:
 
   * It will give you optimized list of files and directories for the given type of disk (e.g. CD or DVD).
   * It will also generate the project files for some of the well known disk burning softwares in windows and linux. You can readily use open these projects in the burning softwares to burn the disks. (Currently Infrarecorder, and Brasero are supported. K3B support is on the way)
-  * _DiskPacker_ also generates shell script (and batch file for windows) which you can run if you want to delete the files you have just backed up if you want.
+  * _DiskPacker _ also generates shell script (and batch file for windows) which you can run if you want to delete the files you have just backed up if you want.
 
 = Details =
 
@@ -34,8 +34,10 @@ Alternatively, on a linux system
 
   * Run main.rb: `ruby main.rb`
   * Output files are generated in the same directory (_lib_)
-    * _bin_packed.txt_ --> shows how many disks you need to backup all your stuff (as specified in _input_paths.txt_) and which files go in which disks, freespace in each disks etc. You can use this info to backup your files manually. (_bin_packed_windows.txt_ and _bin_packed_linux.txt_ are generated now in order to accommodate file path differences)
-    * *windows only* _BACKUP_0.irp, BACKUP_1.irp, etc_ --> Infrarecorder project files. You can open these files in Infrarecorder (Opensource cd/dvd burner for windows) to burn your CD/DVDs.
-    * *windows only* _delete_backup_set_0.bat, _delete_backup_set_1.bat, etc_ --> batch files to erase files after backup. _delete_backup_set_0.bat_ has code to erase files that are included in _BACKUP_0.irp_ or *id=0* section in _bins_packed_windows.txt_
-    * *linux only* _brasero_BACKUP_0.xml, _brasero_BACKUP_1.xml, brasero_BACKUP_2.xml, etc_ -> Brasero project files. You can open these files in Brasero (Opensource cd/dvd burner for GNOME. Default burner in Ubuntu) to burn your CD/DVDs.
-    * *linux only* _delete_backup_set_0.sh, _delete_backup_set_1.sh, etc_ --> shell scripts to erase files after backup. _delete_backup_set_0.sh_ has code to erase files that are included in _brasero_BACKUP_0.xml_ or *id=0* section in _bins_packed_linux.txt_
+    * *Report* A report is generated with information about how many disks you need to backup all your stuff and which files go in which disks, free space in each disks, etc. You can use this info to backup your files manually. (_bin_packed_windows.txt_ and _bin_packed_linux.txt_ are generated now in order to accommodate file path differences)
+    * *Generated Disk Burning Projects* 
+      * *windows only* Infrarecorder projects are generated viz., _BACKUP_0.irp, BACKUP_1.irp, etc_. You can open these files in Infrarecorder, a opensource cd/dvd burner for windows, to burn your CD/DVDs.
+      * *linux only* Brasero projects are generated viz., _brasero_BACKUP_0.xml, _brasero_BACKUP_1.xml, etc_. You can open these files in Brasero, a opensource cd/dvd burner for linux GNOME desktop. It is also now the default burner in Ubuntu.
+    * *Eraser scripts*
+      * *windows only* Batch files are generated to erase the files after backup if desired viz., _delete_backup_set_0.bat, _delete_backup_set_1.bat, etc_. _delete_backup_set_0.bat_ has code to erase files that are included in _BACKUP_0.irp_ or _id=0_ section in _bins_packed_windows.txt_
+      * *linux only* Shell scripts are generated to erase the files after backup if desired viz., _delete_backup_set_0.sh, _delete_backup_set_1.sh, etc_. _delete_backup_set_0.sh_ has code to erase files that are included in _brasero_BACKUP_0.xml_ or _id=0_ section in _bins_packed_linux.txt_
