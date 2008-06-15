@@ -74,10 +74,10 @@ class BinFactory
 end
 
 class BinsReport
-  attr_accessor :bins
+  attr_accessor :bins,:skipped
   
-  def initialize(bins)
-    @bins = bins
+  def initialize(bins,skipped)
+    @bins, @skipped = bins, skipped
   end
     
   def report(path="", report_name="bin_packed")
@@ -99,10 +99,20 @@ class BinsReport
     output_linux << @bins.to_s + "\n"
 
     [output_windows,output_linux].each do |output|
-      output << "\n\nTotal number of disks : #{@bins.size}\n"  
+      output << "\n\n--------------------------------------------------------------------------------\n"
+      output << "Total number of disks : #{@bins.size}\n"  
       output << "Total stored capacity : #{(stored/1024/1024).to_i} MB\n"
       output << "Total wasted capacity : #{(wasted/1024/1024).to_i} MB\n"
+      output << "--------------------------------------------------------------------------------\n"
+      
+      output << "\nSkipped Files and Folders: "
+      output << "none" if @skipped.empty?
+      output << "\n"
     end
+    
+    # skipped elements info
+    output_windows << @skipped.collect{|e| "\t" + e.to_s_windows + "\n"}.to_s + "\n"
+    output_linux << @skipped.collect{|e| "\t" + e.to_s + "\n"}.to_s + "\n"
   end
   
   def generate_delete_script(path="", script_name="delete_backup_set")

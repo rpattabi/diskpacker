@@ -92,4 +92,43 @@ class TestBinPacker < Test::Unit::TestCase
       '/etc/file.ext'
     ],a)
   end
+  
+  def test_skipped_basic
+    dvd_factory = BinFactory.new(:DVD4_7)
+    
+    biggie = Element.new('/etc/file.ext',10000000000000)
+    bin_packer = BinPacker.new(dvd_factory, [biggie])
+    bin_packer.best_fit
+    assert_equal(1,bin_packer.skipped.size)
+    assert_equal([biggie],bin_packer.skipped)
+  end
+  
+  def test_skipped_mixed
+    dvd_factory = BinFactory.new(:DVD4_7)
+    
+    rf1 = Element.new('/etc/file.ext',2000)
+    d = CompositeElement.new('/etc/directory',40000000000000)
+    df1 = Element.new('/etc/directory/dir_file.ext',20000000000000)
+    dd = CompositeElement.new('/etc/directory/sub',20000000000000)    
+    ddf1 = Element.new('/etc/directory/sub/dir_sub_file.ext',20000000000000)
+    d1 = CompositeElement.new('/etc/directory1',3000)
+    d1f1 = Element.new('/etc/directory1/dir1_file.ext',3000)
+    
+    root = CompositeElement.new('/etc',9000)
+    root << rf1
+    dd << ddf1
+    d1 << d1f1
+    d << df1
+    d << dd
+    root << d
+    root << d1
+    
+    walker_root = ElementWalker.new
+    walker_root.walk(root)
+    
+    bin_packer = BinPacker.new(dvd_factory,walker_root.elements)        
+    bin_packer.best_fit
+    assert_equal(4, bin_packer.skipped.size)
+    assert_equal([d,df1,dd,ddf1],bin_packer.skipped)
+  end
 end

@@ -2,11 +2,12 @@ require 'bin.rb'
 require 'element.rb'
 
 class BinPacker
-  attr_accessor :bins, :elements
+  attr_accessor :bins, :elements, :skipped
 
   def initialize( bin_factory, elements)
     @bin_factory, @elements = bin_factory, elements
     @bins = []
+    @skipped = []
     @bins << bin_factory.create_bin
   end
   
@@ -41,9 +42,11 @@ class BinPacker
           if new_bin.capacity >= element.size
             new_bin.add_element(element)
           else
-            skipped << element
+           @skipped << element
           end
         end
+      else
+        @skipped << element
       end
     end
     
