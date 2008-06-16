@@ -1,91 +1,19 @@
-require 'bin.rb'
-require 'element.rb'
-require 'bin_packer.rb'
-require 'disk_project_generator_factory'
+require 'bin'
+require 'bin_packer'
 
-require 'find'
+require 'input_builder'
+require 'output_builder'
 
 $KCODE = 'UTF8'
 
-def dir_tree_walker(input_path, &block)
-  result = yield(input_path)
-  
-  if File.directory?(input_path)
-    Find.find(input_path) do |path|
-      if path != input_path && File.dirname(path) == input_path
-          result << dir_tree_walker(path,&block)
-      end
-    end
-  end
-  
-  result
-end
 
-def element_generator(input_paths)
-  root_elements = []
-  
-  input_paths.each do |input_path| 
-      root_elements << dir_tree_walker(input_path) do |f|
-        if File.directory?(f)
-          CompositeElement.new(f, File.size(f)*1024.0)
-        else
-          Element.new(f, File.size(f))
-        end
-      end
-  end
-  
-  root_elements
-end
-
-def collect_input_paths(file='input_paths.txt')
-  input_paths = []
-  File.open(file,'r').readlines.each do |input_path|
-    if input_path && input_path.strip != ''
-      input_path = input_path.strip.gsub(/\\/,"/") ## converts windows style c:\temp paths to c:/temp
-      input_paths << input_path if File.directory?(input_path)
-    end
-  end
-  
-  input_paths
-end
-
-def generate_elements(input_paths)
-  elements = []
-  root_elements = element_generator(input_paths)
-  root_elements.each do |root|
-    elements << root.elements
-  end
-
-  elements.flatten
-end
-
-def generate_disk_burning_projects(packer_result,input_paths)
-  project_generator_factory = DiskProjectGeneratorFactory.new
-
-  generators = []
-  ['brasero','infra_recorder'].each do |g|
-    generator = project_generator_factory.create_generator(g)
-    generator.elements_input_paths = input_paths
-    generators << generator
-  end
-
-  packer_result.packed_bins.each do |bin|
-    generators.each do |generator|
-      generator.elements_input_paths = input_paths
-      generator.bin = bin
-      generator.generate()
-    end
-  end
-end
-
-input_paths = collect_input_paths('input_paths.txt')
-elements = generate_elements(input_paths)
+input_builder = InputBuilder.new('input_paths.txt')
 
 bin_factory = BinFactory.new(:DVD4_7)
 bin_packer = BinPacker.new
-result = bin_packer.best_fit(bin_factory, elements)
+result = bin_packer.best_fit(bin_factory, input_builder.input_elements)
 
-bin_report = BinsReport.new
-bin_report.report(result)
-bin_report.generate_delete_script(result)
-generate_disk_burning_projects(result, input_paths)
+output_builder = OutputBuilder.new
+output_builder.build_report(result)
+output_builder.build_delete_script(result)
+output_builder.build_disk_burning_projects(result, input_builder.input_paths)
