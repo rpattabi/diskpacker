@@ -6,6 +6,11 @@ require '../lib/disk_project_generators/infrarecorder'
 require 'tempfile'
 
 class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
+  def setup
+    @input_info = InputInfo.new
+    @input_info.input_paths = ['/etc']
+  end
+  
   def test_generate
     # get the bin ready first
     dvd_bin_factory = BinFactory.new(:DVD4_7)
@@ -28,10 +33,10 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
     
     irp_generator = InfraRecorderProjectGenerator.new
     irp_generator.bin = dvd
-    irp_generator.elements_input_paths = ['/etc']
+    irp_generator.input_info = @input_info
     
     out = Tempfile.new("tempfile")
-    irp_generator.generate(out.path)
+    irp_generator.generate("BACKUP", out.path)
     
     out_s = open(out.path) do |f|
       f.rewind

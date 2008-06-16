@@ -6,9 +6,9 @@ require 'erb'
 $KCODE = "UTF8"
 
 class BraseroProjectGenerator
-  attr_accessor :bin, :elements_input_paths
+  attr_accessor :bin, :input_info
   
-  def generate(file="brasero_BACKUP_#{@bin.id}.xml")
+  def generate(name="BACKUP", file="brasero_#{name}_#{@bin.id}.xml")
     brasero_template = %q{<?xml version="1.0" encoding="UTF8"?>
 <braseroproject>
 	<version>0.2</version>
@@ -31,6 +31,7 @@ class BraseroProjectGenerator
     }
     
     bin = @bin
+    elements_input_paths = @input_info.input_paths
     
     project = File.open(file,'w')
     project << ERB.new(brasero_template, 0, '<>').result(binding)

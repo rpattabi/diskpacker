@@ -3,12 +3,18 @@ require 'find'
   
 $KCODE = 'UTF8'
 
-class InputBuilder
+class InputInfo
   attr_accessor :input_paths, :input_elements
+end
+
+class InputBuilder
   
-  def initialize(input_file='input_paths.txt')
-    @input_paths = collect_input_paths(input_file)
-    @input_elements = generate_elements(@input_paths)
+  def build(input_file='input_paths.txt')
+    input_info = InputInfo.new
+    input_info.input_paths = collect_input_paths(input_file)
+    input_info.input_elements = generate_elements(input_info.input_paths)
+    
+    input_info
   end
 
   private
