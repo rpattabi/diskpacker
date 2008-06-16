@@ -59,7 +59,7 @@ def generate_elements(input_paths)
   elements.flatten
 end
 
-def generate_disk_burning_projects(bins,input_paths)
+def generate_disk_burning_projects(packer_result,input_paths)
   project_generator_factory = DiskProjectGeneratorFactory.new
 
   generators = []
@@ -69,7 +69,7 @@ def generate_disk_burning_projects(bins,input_paths)
     generators << generator
   end
 
-  bins.each do |bin|
+  packer_result.packed_bins.each do |bin|
     generators.each do |generator|
       generator.elements_input_paths = input_paths
       generator.bin = bin
@@ -82,13 +82,10 @@ input_paths = collect_input_paths('input_paths.txt')
 elements = generate_elements(input_paths)
 
 bin_factory = BinFactory.new(:DVD4_7)
-bin_packer = BinPacker.new(bin_factory, elements)
-packed_bins = bin_packer.best_fit()  # returns bins
-skipped_elements = bin_packer.skipped
+bin_packer = BinPacker.new
+result = bin_packer.best_fit(bin_factory, elements)
 
-
-bin_report = BinsReport.new(packed_bins,skipped_elements)
-bin_report.report()
-bin_report.generate_delete_script()
-
-generate_disk_burning_projects(packed_bins, input_paths)
+bin_report = BinsReport.new
+bin_report.report(result)
+bin_report.generate_delete_script(result)
+generate_disk_burning_projects(result, input_paths)

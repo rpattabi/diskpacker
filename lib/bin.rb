@@ -74,13 +74,8 @@ class BinFactory
 end
 
 class BinsReport
-  attr_accessor :bins,:skipped
-  
-  def initialize(bins,skipped)
-    @bins, @skipped = bins, skipped
-  end
     
-  def report(path="", report_name="bin_packed")
+  def report(bin_packer_result, path="", report_name="bin_packed")
     path = fix_path(path)
     
     # windows
@@ -90,35 +85,35 @@ class BinsReport
     
     stored = 0
     wasted = 0
-    @bins.each do |bin|
+    bin_packer_result.packed_bins.each do |bin|
       stored += bin.stored
       wasted += bin.free_space
     end
 
-    output_windows << @bins.collect { |bin| bin.to_s_windows }.to_s + "\n"
-    output_linux << @bins.to_s + "\n"
+    output_windows << bin_packer_result.packed_bins.collect { |bin| bin.to_s_windows }.to_s + "\n"
+    output_linux << bin_packer_result.packed_bins.to_s + "\n"
 
     [output_windows,output_linux].each do |output|
       output << "\n\n--------------------------------------------------------------------------------\n"
-      output << "Total number of disks : #{@bins.size}\n"  
+      output << "Total number of disks : #{bin_packer_result.packed_bins.size}\n"  
       output << "Total stored capacity : #{(stored/1024/1024).to_i} MB\n"
       output << "Total wasted capacity : #{(wasted/1024/1024).to_i} MB\n"
       output << "--------------------------------------------------------------------------------\n"
       
       output << "\nSkipped Files and Folders: "
-      output << "none" if @skipped.empty?
+      output << "none" if bin_packer_result.skipped_elements.empty?
       output << "\n"
     end
     
     # skipped elements info
-    output_windows << @skipped.collect{|e| "\t" + e.to_s_windows + "\n"}.to_s + "\n"
-    output_linux << @skipped.collect{|e| "\t" + e.to_s + "\n"}.to_s + "\n"
+    output_windows << bin_packer_result.skipped_elements.collect{|e| "\t" + e.to_s_windows + "\n"}.to_s + "\n"
+    output_linux << bin_packer_result.skipped_elements.collect{|e| "\t" + e.to_s + "\n"}.to_s + "\n"
   end
   
-  def generate_delete_script(path="", script_name="delete_backup_set")
+  def generate_delete_script(bin_packer_result, path="", script_name="delete_backup_set")
     path = fix_path(path)
     
-    @bins.each do |bin|
+    bin_packer_result.packed_bins.each do |bin|
         output_windows = File.open(path+script_name+"_#{bin.id}.bat",'w')
         output_linux = File.open(path+script_name+"_#{bin.id}.sh",'w')
         #File.chmod(0100, path+script_name+"_#{bin.id}.sh") #make the file executable
