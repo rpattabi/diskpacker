@@ -7,9 +7,15 @@ $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 
 require 'test/unit'
 require '../lib/disk_project_generators/brasero'
+require 'input_builder'
 require 'tempfile'
 
 class TestBraseroProjectGenerator < Test::Unit::TestCase
+  def setup
+    @input_info = InputInfo.new
+    @input_info.input_paths = ['/etc']
+  end
+  
   def test_generate
     # get the bin ready first
     dvd_bin_factory = BinFactory.new(:DVD4_7)
@@ -30,10 +36,10 @@ class TestBraseroProjectGenerator < Test::Unit::TestCase
     
     brasero_generator = BraseroProjectGenerator.new
     brasero_generator.bin = dvd
-    brasero_generator.elements_input_paths = ['/etc']
+    brasero_generator.input_info = @input_info
     
     out = Tempfile.new("tempfile")
-    brasero_generator.generate(out.path)
+    brasero_generator.generate("BACKUP",out.path)
     
     out_s = open(out.path) do |f|
       f.rewind
