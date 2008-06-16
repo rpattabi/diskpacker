@@ -1,5 +1,5 @@
-require 'bin.rb'
-require 'element.rb'
+require 'bin'
+require 'element'
 
 class BinPacker
   def best_fit( bin_factory, elements)  

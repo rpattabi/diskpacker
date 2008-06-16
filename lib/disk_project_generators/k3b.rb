@@ -1,5 +1,5 @@
-require 'bin.rb'
-require 'element.rb'
+require 'bin'
+require 'element'
 
 require 'erb'
 require 'iconv'
