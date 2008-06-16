@@ -10,9 +10,7 @@ require 'bin_packer'
 require 'tempfile'
 
 class TestBinPacker < Test::Unit::TestCase
-  def prepare_bin
-    dvd_factory = BinFactory.new(:DVD4_7)
-    
+  def setup   
     rf1 = Element.new('/etc/file.ext',2000)
     d = CompositeElement.new('/etc/directory',4000)
     df1 = Element.new('/etc/directory/dir_file.ext',2000)
@@ -33,12 +31,12 @@ class TestBinPacker < Test::Unit::TestCase
     walker_root = ElementWalker.new
     walker_root.walk(root)
     
-    BinPacker.new(dvd_factory,walker_root.elements)    
+    @dvd_factory = BinFactory.new(:DVD4_7)
+    @bin_packer = BinPacker.new
+    @elements = walker_root.elements
   end
   
-  def test_bin_packer_creation
-    dvd_factory = BinFactory.new(:DVD4_7)
-    
+  def test_bin_packer_simple
     rf1 = Element.new('/etc/file.ext',2000)
     d = CompositeElement.new('/etc/directory',4000)
     df1 = Element.new('/etc/directory/dir_file.ext',2000)
@@ -59,26 +57,27 @@ class TestBinPacker < Test::Unit::TestCase
     walker_root = ElementWalker.new
     walker_root.walk(root)
     
-    bin_packer = BinPacker.new(dvd_factory,walker_root.elements)
-    assert_equal(1,bin_packer.bins.size)
-    assert_equal([d,df1,dd,ddf1,d1,d1f1,rf1],bin_packer.elements)
+    bin_packer = BinPacker.new
+    result = bin_packer.best_fit(@dvd_factory,walker_root.elements)
+    assert_equal(1,result.packed_bins.size)
+    assert_equal([d,df1,dd,ddf1,d1,d1f1,rf1],result.packed_bins.first.elements)
+    assert_equal(0,result.skipped_elements.size)
   end
   
   def test_packing
-    bin_packer = prepare_bin
-    bin_packer.best_fit()
+    result = @bin_packer.best_fit(@dvd_factory,@elements)
     
-    assert_equal(1,bin_packer.bins.size)
-    assert_equal(7,bin_packer.bins.first.elements.size)
+    assert_equal(1,result.packed_bins.size)
+    assert_equal(7,result.packed_bins.first.elements.size)
         
     total_size = 0
-    bin_packer.bins.first.elements.each do |e|
+    result.packed_bins.first.elements.each do |e|
       total_size += e.size unless e.name.scan(/\./).empty? #consider only the files
     end
     
     assert_equal(9000,total_size)
    
-    a = bin_packer.bins.first.elements.collect do |e|
+    a = result.packed_bins.first.elements.collect do |e|
       e.name
     end
     
@@ -93,19 +92,15 @@ class TestBinPacker < Test::Unit::TestCase
     ],a)
   end
   
-  def test_skipped_basic
-    dvd_factory = BinFactory.new(:DVD4_7)
-    
+  def test_skipped_basic    
     biggie = Element.new('/etc/file.ext',10000000000000)
-    bin_packer = BinPacker.new(dvd_factory, [biggie])
-    bin_packer.best_fit
-    assert_equal(1,bin_packer.skipped.size)
-    assert_equal([biggie],bin_packer.skipped)
+    
+    result = @bin_packer.best_fit(@dvd_factory, [biggie])
+    assert_equal(1,result.skipped_elements.size)
+    assert_equal([biggie],result.skipped_elements)
   end
   
   def test_skipped_mixed
-    dvd_factory = BinFactory.new(:DVD4_7)
-    
     rf1 = Element.new('/etc/file.ext',2000)
     d = CompositeElement.new('/etc/directory',40000000000000)
     df1 = Element.new('/etc/directory/dir_file.ext',20000000000000)
@@ -126,9 +121,8 @@ class TestBinPacker < Test::Unit::TestCase
     walker_root = ElementWalker.new
     walker_root.walk(root)
     
-    bin_packer = BinPacker.new(dvd_factory,walker_root.elements)        
-    bin_packer.best_fit
-    assert_equal(4, bin_packer.skipped.size)
-    assert_equal([d,df1,dd,ddf1],bin_packer.skipped)
+    result = @bin_packer.best_fit(@dvd_factory,walker_root.elements)        
+    assert_equal(4, result.skipped_elements.size)
+    assert_equal([d,df1,dd,ddf1],result.skipped_elements)
   end
 end
