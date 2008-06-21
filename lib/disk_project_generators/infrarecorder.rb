@@ -7,9 +7,13 @@ require 'iconv'
 $KCODE = "UTF8"
 
 class InfraRecorderProjectGenerator
-  attr_accessor :bin, :input_info
+  attr_accessor :bin, :input_info, :output_path
+  
+  def initialize
+    @output_path = ''
+  end
 
-  def generate(name="BACKUP", file="#{name}_#{@bin.id}.irp")
+  def generate(name="BACKUP", file=@output_path+"#{name}_#{@bin.id}.irp")
     irp_template = %q{<?xml version="1.0" encoding="utf-16" standalone="yes"?>
 <InfraRecorder>
 	<Project version="3" type="0" dvd="1">
