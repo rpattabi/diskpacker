@@ -6,9 +6,13 @@ require 'erb'
 $KCODE = "UTF8"
 
 class BraseroProjectGenerator
-  attr_accessor :bin, :input_info
+  attr_accessor :bin, :input_info, :output_path
   
-  def generate(name="BACKUP", file="brasero_#{name}_#{@bin.id}.xml")
+  def initialize
+    @output_path = ''
+  end  
+  
+  def generate(name="BACKUP", file=@output_path+"brasero_#{name}_#{@bin.id}.xml")
     brasero_template = %q{<?xml version="1.0" encoding="UTF8"?>
 <braseroproject>
 	<version>0.2</version>

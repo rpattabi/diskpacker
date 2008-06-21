@@ -5,9 +5,13 @@ require 'erb'
 require 'iconv'
 
 class K3bProjectGenerator
-  attr_accessor :bin
+  attr_accessor :bin, :input_info, :output_path
   
-  def generate(file="divx_movies_#{@bin.id}.xml")
+  def initialize
+    @output_path = ''
+  end  
+  
+  def generate(name="BACKUP", file=@output_path + "#{name}_#{@bin.id}.xml")
     k3b_template = %q{
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE k3b_dvd_project>
