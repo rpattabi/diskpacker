@@ -9,13 +9,14 @@ class K3bProjectGenerator
   
   def initialize
     @output_path = ''
+    @temp_tree = ''
   end  
   
-  def generate(name="BACKUP", file=@output_path + "#{name}_#{@bin.id}.xml")
-    k3b_template = %q{
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE k3b_dvd_project>
-<k3b_dvd_project>
+  def generate(name="BACKUP", file=@output_path + "k3b_#{name}_#{@bin.id}.xml")
+    k3b_template = %q{<?xml version="1.0" encoding="UTF-8"?>
+<% type = @bin.type.to_s.match(/dvd/) ? 'dvd' : 'data' %>
+<!DOCTYPE k3b_<%= type %>_project>
+<k3b_<%= type %>_project>
 <general>
 <writing_mode>auto</writing_mode>
 <dummy activated="no"/>
@@ -52,78 +53,44 @@ class K3bProjectGenerator
 <whitespace_replace_string>_</whitespace_replace_string>
 <data_track_mode>auto</data_track_mode>
 <multisession>auto</multisession>
-<verify_data activated="yes"/>
+<verify_data activated="no"/>
 </options>
 <header>
-<volume_id>divx_movies_#{@bin.id}</volume_id>
+<volume_id><%= "#{name}_#{@bin.id}" %></volume_id>
 <volume_set_id/>
 <volume_set_size>1</volume_set_size>
 <volume_set_number>1</volume_set_number>
 <system_id>LINUX</system_id>
-<application_id>K3B THE CD KREATOR (C) 1998-2006 SEBASTIAN TRUEG AND THE K3B TEAM</application_id>
+<application_id>DiskPacker (c) 2008</application_id>
 <publisher/>
 <preparer/>
 </header>
 <files>
 <% @bin.elements.each do |element| %>
-<% file = element.name %>
-<% unless File.directory?(file) %>
-  <file name="<%= File.basename(file) %>">
-    <url><%= file %></url>
-  </file>
-<% else %>
-  <directory name="<%= file.split('/').last %>">
-<% Find.find(file) do |path| %>
-<% unless path == file %>
-<%= ERB.new(file_recursive_template, 0, '<>').result(binding) %>
+<% walk_the_element_tree(element) %>
 <% end %>
-  </directory>
-<% end %>
-<file name="Ocean's Eleven.avi">
-<url>/home/raguanu/Videos/movies/Ocean's Eleven.avi</url>
-</file>
-<file name="Ocean's Twelve.mpg">
-<url>/home/raguanu/Videos/movies/Ocean's Twelve.mpg</url>
-</file>
-<file name="Scary Movie 4.mpg">
-<url>/home/raguanu/Videos/movies/Scary Movie 4.mpg</url>
-</file>
-<file name="Shogun Assassin.avi">
-<url>/home/raguanu/Videos/movies/Shogun Assassin.avi</url>
-</file>
-<file name="Shooter[2007].avi">
-<url>/home/raguanu/Videos/movies/Shooter[2007].avi</url>
-</file>
-<file name="Supertroopers.avi">
-<url>/home/raguanu/Videos/movies/Supertroopers.avi</url>
-</file>
-<file name="The Hitchhikers Guide to The Galaxy.avi">
-<url>/home/raguanu/Videos/movies/The Hitchhikers Guide to The Galaxy.avi</url>
-</file>
-<file name="The Notebook.avi">
-<url>/home/raguanu/Videos/movies/The Notebook.avi</url>
-</file>
-<file name="The Number 23.mpg">
-<url>/home/raguanu/Videos/movies/The Number 23.mpg</url>
-</file>
-<file name="The.Bourne.Ultimatum.2007.DvD.XviD.Eng-FxM.avi">
-<url>/home/raguanu/Videos/movies/The.Bourne.Ultimatum.2007.DvD.XviD.Eng-FxM.avi</url>
-</file>
-<file name="The.Last.Samurai.TS.SVCD-MPT.DIVX_Xtech.avi">
-<url>/home/raguanu/Videos/movies/The.Last.Samurai.TS.SVCD-MPT.DIVX_Xtech.avi</url>
-</file>
-<file name="The_Counterfeiter.avi">
-<url>/home/raguanu/Videos/movies/The_Counterfeiter.avi</url>
-</file>
-<file name="Transformers[2007].TS.Eng.DivX-LTT.avi">
-<url>/home/raguanu/Videos/movies/Transformers[2007].TS.Eng.DivX-LTT.avi</url>
-</file>
-<file name="Troy.avi">
-<url>/home/raguanu/Videos/movies/Troy.avi</url>
-</file>
-</directory>
+<%= @temp_tree %>
 </files>
-</k3b_dvd_project>
-    }
+</k3b_<%= type %>_project>
+}
+    
+    element_walker = ElementWalker.new
+    @temp_tree = ''
+
+    project = File.open(file,'w')
+    project << ERB.new(k3b_template, 0, '<>').result(binding)
+    project.close()
   end
+  
+  def walk_the_element_tree(element)
+    unless File.directory?(element.name)
+      @temp_tree += "<file name=\"#{File.basename(element.name)}\"><url>#{element.name}</url></file>"
+    else
+      @temp_tree += "<directory name=\"#{element.name.split('/').last}\">"
+      element.elements.each do |e|
+        walk_the_element_tree(e)
+      end
+      @temp_tree += "</directory>"
+    end
+  end    
 end

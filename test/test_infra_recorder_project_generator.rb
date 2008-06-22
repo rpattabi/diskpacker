@@ -3,12 +3,19 @@ $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 
 require 'test/unit'
 require '../lib/disk_project_generators/infrarecorder'
+require 'input_builder'
 require 'tempfile'
 
+require 'rubygems'
+require 'flexmock/test_unit'
+
 class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
+  include FlexMock::TestCase
+
   def setup
     @input_info = InputInfo.new
     @input_info.input_paths = ['/etc']
+    flexmock(File).should_receive(:directory?).and_return{|f| f.match(/\./) ? false : true}
   end
   
   def test_generate
@@ -69,11 +76,10 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
 		<Boot>
 		</Boot>
 		<Data>
-			<File0 flags="0">
+			<File0 flags="1">
 				<InternalName>/directory</InternalName>
 				<FullPath>/etc/directory</FullPath>
 				<FileTime>128204264600000000</FileTime>
-				<FileSize>3</FileSize>
 			</File0>
 			<File1 flags="0">
 				<InternalName>/directory/file.ext</InternalName>
@@ -81,11 +87,10 @@ class TestInfraRecorderProjectGenerator < Test::Unit::TestCase
 				<FileTime>128204264600000000</FileTime>
 				<FileSize>1</FileSize>
 			</File1>
-			<File2 flags="0">
+			<File2 flags="1">
 				<InternalName>/directory/sub</InternalName>
 				<FullPath>/etc/directory/sub</FullPath>
 				<FileTime>128204264600000000</FileTime>
-				<FileSize>1</FileSize>
 			</File2>
 			<File3 flags="0">
 				<InternalName>/directory/sub/file2.ext</InternalName>

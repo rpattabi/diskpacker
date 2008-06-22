@@ -58,6 +58,20 @@ class ElementWalker
     end
   end
   
+  def walk_with_block(element, &block)
+    yield(element)
+    
+    if element.class == CompositeElement
+      element.elements.each do |e|
+        if e.class == CompositeElement
+          walk_with_block(e, &block)
+        else
+          yield(e)
+        end
+      end
+    end
+  end
+  
   def elements
     @elements.flatten.sort
   end
