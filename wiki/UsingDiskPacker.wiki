@@ -8,7 +8,7 @@ This page describes the basic usage of [DiskPacker]
 You just give the list of directories which has your files or other directories you intend to backup. This is what you get back from [DiskPacker] in return:
 
   * It will give you optimized list of files and directories for the given type of disk (e.g. CD or DVD).
-  * It will also generate the project files for some of the well known disk burning softwares in windows and linux. You can readily use open these projects in the burning softwares to burn the disks. (Currently Infrarecorder, and Brasero are supported. K3B support is on the way)
+  * It will also generate the project files for some of the well known disk burning softwares in windows and linux. You can readily use open these projects in the burning softwares to burn the disks. (Currently Infrarecorder, K3B, and Brasero are supported.)
   * [DiskPacker] also generates shell scripts (and batch files for windows) which you can run if you want to delete the files you have just backed up if you want.
 
 = Details =
@@ -51,5 +51,5 @@ Here is the output tree strucuture. The details are self explanatory.
 
     * *Eraser scripts*
       * You can find the eraser scripts under `disk_packer_output/delete_scripts`.
-      * *Windows only* Batch files are generated to erase the files after backup if desired viz., `delete_backup_set_0.bat`, `delete_backup_set_1.bat`, etc. `delete_backup_set_0.bat` has code to erase files that are included in `BACKUP_0.irp` or `id=0` section in `bins_packed_windows.txt`
-      * *Linux only* Shell scripts are generated to erase the files after backup if desired viz., `delete_backup_set_0.sh`, `delete_backup_set_1.sh`, etc. `delete_backup_set_0.sh` has code to erase files that are included in `brasero_BACKUP_0.xml` or `id=0` section in `bins_packed_linux.txt`
+      * *Windows only* Batch files are generated to erase the files after backup if desired viz., `delete_backup_set_0.bat`, `delete_backup_set_1.bat`, etc. `delete_backup_set_0.bat` has code to erase files that are included in `BACKUP_0.irp` or `id=0` section in `diskpacker_report_windows.txt`
+      * *Linux only* Shell scripts are generated to erase the files after backup if desired viz., `delete_backup_set_0.sh`, `delete_backup_set_1.sh`, etc. `delete_backup_set_0.sh` has code to erase files that are included in `brasero_BACKUP_0.xml` or `id=0` section in `diskpacker_report_linux.txt`
