@@ -10,10 +10,16 @@ require '../lib/disk_project_generators/brasero'
 require 'input_builder'
 require 'tempfile'
 
+require 'rubygems'
+require 'flexmock/test_unit'
+
 class TestBraseroProjectGenerator < Test::Unit::TestCase
+  include FlexMock::TestCase
+  
   def setup
     @input_info = InputInfo.new
     @input_info.input_paths = ['/etc']
+    flexmock(File).should_receive(:directory?).and_return{|f| f.match(/\./) ? false : true}
   end
   
   def test_generate

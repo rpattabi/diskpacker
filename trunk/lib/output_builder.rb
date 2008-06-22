@@ -73,7 +73,7 @@ class OutputBuilder
     generators = []
     project_generator_factory = DiskProjectGeneratorFactory.new
     
-    ['brasero','infra_recorder'].each do |g|
+    ['brasero','infra_recorder', 'k3b'].each do |g|
       generator = project_generator_factory.create_generator(g)
       
       output_path = path + "#{g}/"

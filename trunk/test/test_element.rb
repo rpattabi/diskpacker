@@ -88,6 +88,7 @@ class TestElementWalker < Test::Unit::TestCase
   end
   
   def test_longer_walk
+    
     rf1 = Element.new('/etc/file.ext',2000)
     d = CompositeElement.new('/etc/directory',4000)
     df1 = Element.new('/etc/directory/dir_file.ext',2000)
@@ -108,5 +109,33 @@ class TestElementWalker < Test::Unit::TestCase
     walker_root = ElementWalker.new
     walker_root.walk(root)
     assert_equal([d,df1,dd,ddf1,d1,d1f1,rf1],walker_root.elements)
+  end
+  
+  def test_rubyish_walk
+    rf1 = Element.new('/etc/file.ext',2000)
+    d = CompositeElement.new('/etc/directory',4000)
+    df1 = Element.new('/etc/directory/dir_file.ext',2000)
+    dd = CompositeElement.new('/etc/directory/sub',2000)    
+    ddf1 = Element.new('/etc/directory/sub/dir_sub_file.ext',2000)
+    d1 = CompositeElement.new('/etc/directory1',3000)
+    d1f1 = Element.new('/etc/directory1/dir1_file.ext',3000)
+    
+    root = CompositeElement.new('/etc',9000)
+    root << rf1
+    dd << ddf1
+    d1 << d1f1
+    d << df1
+    d << dd
+    root << d
+    root << d1
+    
+    walker_root = ElementWalker.new
+
+    collected_elements = []
+    expected_elements = [root,rf1,d,df1,dd,ddf1,d1,d1f1]
+    
+    walker_root.walk_with_block(root) { |item| collected_elements << item }
+    assert_equal(expected_elements.length,collected_elements.length) #redundant check. But useful in case of errors.
+    assert_equal(expected_elements,collected_elements)
   end
 end
